@@ -16,6 +16,7 @@ const formSchema = Yup.object().shape({
     .required('Required'),
 
   phone: Yup.string()
+    .matches(/^\d+$/, 'Phone number must contain only digits')
     .min(3, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
@@ -40,7 +41,7 @@ const ContactsForm = () => {
 
     const newContact = {
       name: values.username,
-      number: values.phone,
+      phone: values.phone,
     };
     dispatch(addContact(newContact));
     action.resetForm();

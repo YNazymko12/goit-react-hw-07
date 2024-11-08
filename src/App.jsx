@@ -32,16 +32,12 @@ const App = () => {
         <h1>Phonebook</h1>
         <ContactForm />
         {isLoading && !error && <Loader />}
-        {!isLoading && !error && (
+        {!isLoading && !error && contacts?.length === 0 ? (
+          <p>You don&apos;t have any contacts yet.</p>
+        ) : (
           <>
-            {contacts.length === 0 ? (
-              <p>You don&apos;t have any contacts yet.</p>
-            ) : (
-              <>
-                <SearchBox />
-                <ContactList />
-              </>
-            )}
+            <SearchBox />
+            <ContactList />
           </>
         )}
       </div>
