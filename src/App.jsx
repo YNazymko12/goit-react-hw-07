@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  selectContacts,
+  selectFilteredContacts,
   selectError,
   selectIsLoading,
 } from './redux/contactsSlice';
@@ -20,7 +20,7 @@ const App = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
-  const contacts = useSelector(selectContacts);
+  const contacts = useSelector(selectFilteredContacts);
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -32,12 +32,16 @@ const App = () => {
         <h1>Phonebook</h1>
         <ContactForm />
         {isLoading && !error && <Loader />}
-        {contacts?.length === 0 ? (
-          <p>You don&apos;t have any contacts yet.</p>
-        ) : (
+        {!isLoading && !error && (
           <>
-            <SearchBox />
-            <ContactList />
+            {contacts.length === 0 ? (
+              <p>You don&apos;t have any contacts yet.</p>
+            ) : (
+              <>
+                <SearchBox />
+                <ContactList />
+              </>
+            )}
           </>
         )}
       </div>
