@@ -1,5 +1,9 @@
-import { useSelector } from 'react-redux';
-import { selectContacts } from './redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectContacts,
+  selectError,
+  selectIsLoading,
+} from './redux/contactsSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -8,16 +12,27 @@ import ContactList from './components/ContactList/ContactList';
 import SearchBox from './components/SearchBox/SearchBox';
 
 import './App.css';
+import { useEffect } from 'react';
+import { fetchContacts } from './redux/contactsOps';
+import Loader from './components/Loader/Loader';
 
 const App = () => {
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
   const contacts = useSelector(selectContacts);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <>
       <div>
         <h1>Phonebook</h1>
         <ContactForm />
-        {contacts.length === 0 ? (
+        {isLoading && !error && <Loader />}
+        {contacts?.length === 0 ? (
           <p>You don&apos;t have any contacts yet.</p>
         ) : (
           <>

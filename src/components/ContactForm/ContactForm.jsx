@@ -1,9 +1,11 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, selectContacts } from '../../redux/contactsSlice';
-import { nanoid } from '@reduxjs/toolkit';
+import { selectFilteredContacts } from '../../redux/contactsSlice';
+
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
+
+import { addContact } from '../../redux/contactsOps';
 
 import css from './ContactForm.module.css';
 
@@ -23,9 +25,7 @@ const initialValues = { username: '', phone: '' };
 
 const ContactsForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
-  const nameFieldId = nanoid();
-  const phoneFieldId = nanoid();
+  const contacts = useSelector(selectFilteredContacts);
 
   const handleSubmit = (values, action) => {
     const isDuplicate = contacts.some(
@@ -39,7 +39,6 @@ const ContactsForm = () => {
     }
 
     const newContact = {
-      id: nanoid(),
       name: values.username,
       number: values.phone,
     };
@@ -54,14 +53,14 @@ const ContactsForm = () => {
         validationSchema={formSchema}
       >
         <Form className={css.form}>
-          <label className={css.label} htmlFor={nameFieldId}>
+          <label className={css.label} htmlFor="username">
             Name
           </label>
           <Field
             className={css.input}
             type="text"
             name="username"
-            id={nameFieldId}
+            id="username"
           />
           <ErrorMessage
             className={css.error}
@@ -70,16 +69,11 @@ const ContactsForm = () => {
           />
           <label
             className={`${css.label} ${css.labelWithSpace}`}
-            htmlFor={phoneFieldId}
+            htmlFor="phone"
           >
             Number
           </label>
-          <Field
-            className={css.input}
-            type="text"
-            name="phone"
-            id={phoneFieldId}
-          />
+          <Field className={css.input} type="text" name="phone" id="phone" />
           <ErrorMessage className={css.error} name="phone" component="span" />
           <button className={css.btn} type="submit">
             Add contact
